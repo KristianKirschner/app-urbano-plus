@@ -1,0 +1,33 @@
+package com.urbanoplus.auth.controller;
+
+import com.urbanoplus.auth.dto.*;
+import com.urbanoplus.auth.security.JwtUtil;
+import com.urbanoplus.auth.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequiredArgsConstructor
+public class AuthController {
+
+    private final AuthService service;
+    private final JwtUtil jwt;
+
+    @PostMapping("/users")
+    public void register(@RequestBody UserRequest req) {
+        service.register(req);
+    }
+
+    @PostMapping("/login")
+    public TokenResponse login(@RequestBody LoginRequest req) {
+        return service.login(req);
+    }
+
+    @GetMapping("/me")
+    public Object me(HttpServletRequest req) {
+        String token = req.getHeader("Authorization").replace("Bearer ", "");
+        String email = jwt.getEmail(token);
+        return service.me(email);
+    }
+}
