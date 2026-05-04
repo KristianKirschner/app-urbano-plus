@@ -10,7 +10,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final Key key = Keys.hmacShaKeyFor("chave-ultra-mega-secreta-fodase".getBytes());
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String generateToken(String email, String role) {
         return Jwts.builder()
