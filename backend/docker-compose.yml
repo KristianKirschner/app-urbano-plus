@@ -12,6 +12,8 @@ services:
       - "5432:5432"
 
   app:
+    env_file:
+      - .env
     build: .
     container_name: urbano
     ports:

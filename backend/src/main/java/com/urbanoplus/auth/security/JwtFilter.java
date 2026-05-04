@@ -1,37 +1,53 @@
+// JwtFilter.java
 package com.urbanoplus.auth.security;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtFilter extends GenericFilter {
+public class JwtFilter extends OncePerRequestFilter {
+
+    private static final String BEARER_PREFIX = "Bearer ";
 
     private final JwtUtil jwt;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletRequest req = (HttpServletRequest) request;
+        String header = request.getHeader("Authorization");
 
-        String header = req.getHeader("Authorization");
+        if (header != null && header.startsWith(BEARER_PREFIX)) {
+            String token = header.substring(BEARER_PREFIX.length());
 
-        if (header != null && header.startsWith("Bearer ")) {
-            String token = header.replace("Bearer ", "");
-            String email = jwt.getEmail(token);
+            if (jwt.validateToken(token)) {
+                String email = jwt.getEmail(token);
+                String role  = jwt.getRole(token);
 
-            UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
+                var authority = new SimpleGrantedAuthority("ROLE_" + role);
 
-            SecurityContextHolder.getContext().setAuthentication(auth);
+                var auth = new UsernamePasswordAuthenticationToken(
+                        email, null, List.of(authority)
+                );
+
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            } else {
+                log.warn("Invalid or expired JWT from {}", request.getRemoteAddr());
+            }
         }
 
         chain.doFilter(request, response);
