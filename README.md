@@ -62,8 +62,24 @@ docker compose up --build
 
 # Endpoints prontos (por enquanto)
 
-| Método | Rota | Descrição | Bearer Token |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/users` | Cadastro de novo usuário | Não |
-| `POST` | `/login` | Autenticação e geração de token | Não |
-| `GET` | `/me` | Detalhes do usuário autenticado | Sim |
+## Auth
+| Método | Rota | Descrição | Bearer Token | Role |
+| :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/users` | Cadastro de novo usuário | Não | — |
+| `POST` | `/login` | Autenticação e geração de token | Não | — |
+| `GET` | `/me` | Detalhes do usuário autenticado | Sim | Qualquer |
+
+## Ocorrências
+| Método | Rota | Descrição | Bearer Token | Role |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/occurrences` | Lista ocorrências aprovadas e não expiradas | Sim | Qualquer |
+| `GET` | `/occurrences/{id}` | Detalhes de uma ocorrência | Sim | Qualquer |
+| `GET` | `/occurrences/{id}/comments` | Lista comentários de uma ocorrência | Sim | Qualquer |
+| `GET` | `/occurrences/my` | Lista ocorrências do usuário autenticado | Sim | Qualquer |
+| `POST` | `/occurrences` | Reportar nova ocorrência com fotos | Sim | Cidadão |
+| `POST` | `/occurrences/{id}/reopen` | Reabrir ocorrência expirada | Sim | Cidadão |
+| `POST` | `/occurrences/{id}/comments` | Adicionar comentário em uma ocorrência | Sim | Cidadão |
+| `GET` | `/occurrences/admin?status=` | Lista ocorrências por status (pending, rejected, expired) | Sim | Admin |
+| `PATCH` | `/occurrences/{id}/approve` | Aprovar ocorrência | Sim | Admin |
+| `PATCH` | `/occurrences/{id}/reject` | Rejeitar ocorrência com motivo | Sim | Admin |
+| `DELETE` | `/occurrences/{id}/comments/{commentId}` | Remover comentário inapropriado | Sim | Admin |
