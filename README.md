@@ -10,6 +10,12 @@ Projeto feito como parte da disciplina Projeto Integrador V com o professor Thia
 cd mobile
 ```
 
+## Configurar variáveis de ambiente
+Crie um arquivo `.env` na raiz do diretório `mobile/` com o seguinte conteúdo:
+```env
+GOOGLE_MAPS_API_KEY=a-chave-que-ta-no-zap
+```
+
 ## Instalar dependências
 ```bash
 npm install
