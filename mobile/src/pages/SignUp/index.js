@@ -47,7 +47,7 @@ export default function SignUp() {
       return;
     }
     Keyboard.dismiss()
-    await signUp(email, password, nome);
+    signUp(email, password, nome);
     navigation.navigate('SignIn')
   }
 
