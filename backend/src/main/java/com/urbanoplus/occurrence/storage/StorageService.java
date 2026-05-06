@@ -1,6 +1,8 @@
 package com.urbanoplus.occurrence.storage;
 
+import com.urbanoplus.auth.exception.AppException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +27,7 @@ public class StorageService {
 
             return "/uploads/" + filename;
         } catch (IOException e) {
-            throw new RuntimeException("Failed to store file", e);
+            throw new AppException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to store file");
         }
     }
 
@@ -35,7 +37,7 @@ public class StorageService {
             Path file = Paths.get(uploadDir).resolve(filename);
             Files.deleteIfExists(file);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to delete file", e);
+            throw new AppException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete file");
         }
     }
 }

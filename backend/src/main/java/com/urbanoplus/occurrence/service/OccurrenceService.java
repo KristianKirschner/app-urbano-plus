@@ -1,5 +1,6 @@
 package com.urbanoplus.occurrence.service;
 
+import com.urbanoplus.auth.exception.AppException;
 import com.urbanoplus.auth.model.User;
 import com.urbanoplus.auth.repository.UserRepository;
 import com.urbanoplus.occurrence.dto.*;
@@ -7,6 +8,7 @@ import com.urbanoplus.occurrence.model.*;
 import com.urbanoplus.occurrence.repository.*;
 import com.urbanoplus.occurrence.storage.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +39,7 @@ public class OccurrenceService {
     }
 
     public List<CommentResponse> listComments(Long occurrenceId) {
+        findOrThrow(occurrenceId); // garante que a ocorrência existe
         return commentRepository.findByOccurrenceId(occurrenceId)
                 .stream().map(this::toCommentResponse).toList();
     }
@@ -44,7 +47,8 @@ public class OccurrenceService {
     // User
 
     public OccurrenceResponse create(OccurrenceRequest req, List<MultipartFile> files, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "User not found"));
 
         Occurrence o = new Occurrence();
         o.setTitle(req.getTitle());
@@ -73,13 +77,14 @@ public class OccurrenceService {
 
     public OccurrenceResponse reopen(Long id, String email) {
         Occurrence o = findOrThrow(id);
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "User not found"));
 
         if (!o.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Not allowed");
+            throw new AppException(HttpStatus.FORBIDDEN, "You are not allowed to reopen this occurrence");
         }
         if (o.getStatus() != OccurrenceStatus.EXPIRED) {
-            throw new RuntimeException("Only expired occurrences can be reopened");
+            throw new AppException(HttpStatus.CONFLICT, "Only expired occurrences can be reopened");
         }
 
         o.setStatus(OccurrenceStatus.PENDING);
@@ -91,7 +96,8 @@ public class OccurrenceService {
 
     public CommentResponse addComment(Long occurrenceId, CommentRequest req, String email) {
         Occurrence o = findOrThrow(occurrenceId);
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "User not found"));
 
         Comment comment = new Comment();
         comment.setText(req.getText());
@@ -102,12 +108,14 @@ public class OccurrenceService {
     }
 
     public List<OccurrenceResponse> myOccurrences(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "User not found"));
         return occurrenceRepository.findByUserId(user.getId())
                 .stream().map(this::toResponse).toList();
     }
 
     // Admin
+
     public List<OccurrenceResponse> listByStatus(OccurrenceStatus status) {
         return occurrenceRepository.findByStatus(status)
                 .stream().map(this::toResponse).toList();
@@ -115,6 +123,11 @@ public class OccurrenceService {
 
     public OccurrenceResponse approve(Long id) {
         Occurrence o = findOrThrow(id);
+
+        if (o.getStatus() == OccurrenceStatus.APPROVED) {
+            throw new AppException(HttpStatus.CONFLICT, "Occurrence is already approved");
+        }
+
         o.setStatus(OccurrenceStatus.APPROVED);
         o.setApprovedAt(LocalDateTime.now());
         o.setExpiresAt(LocalDateTime.now().plusHours(24));
@@ -123,6 +136,11 @@ public class OccurrenceService {
 
     public OccurrenceResponse reject(Long id, RejectRequest req) {
         Occurrence o = findOrThrow(id);
+
+        if (o.getStatus() == OccurrenceStatus.REJECTED) {
+            throw new AppException(HttpStatus.CONFLICT, "Occurrence is already rejected");
+        }
+
         o.setStatus(OccurrenceStatus.REJECTED);
         o.setRejectionReason(req.getReason());
         return toResponse(occurrenceRepository.save(o));
@@ -130,10 +148,10 @@ public class OccurrenceService {
 
     public void deleteComment(Long occurrenceId, Long commentId) {
         Comment comment = commentRepository.findById(Objects.requireNonNull(commentId))
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Comment not found"));
 
         if (!comment.getOccurrence().getId().equals(occurrenceId)) {
-            throw new RuntimeException("Comment does not belong to this occurrence");
+            throw new AppException(HttpStatus.BAD_REQUEST, "Comment does not belong to this occurrence");
         }
 
         commentRepository.delete(comment);
@@ -143,7 +161,7 @@ public class OccurrenceService {
 
     private Occurrence findOrThrow(Long id) {
         return occurrenceRepository.findById(Objects.requireNonNull(id))
-        .orElseThrow(() -> new RuntimeException("Occurrence not found"));
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Occurrence not found"));
     }
 
     private OccurrenceResponse toResponse(Occurrence o) {

@@ -1,10 +1,12 @@
 package com.urbanoplus.auth.controller;
 
 import com.urbanoplus.auth.dto.*;
+import com.urbanoplus.auth.exception.AppException;
 import com.urbanoplus.auth.security.JwtUtil;
 import com.urbanoplus.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,7 +28,14 @@ public class AuthController {
 
     @GetMapping("/me")
     public Object me(HttpServletRequest req) {
-        String token = req.getHeader("Authorization").replace("Bearer ", "");
+        String header = req.getHeader("Authorization");
+
+        // Return 401 instead of a NullPointerException crash
+        if (header == null || !header.startsWith("Bearer ")) {
+            throw new AppException(HttpStatus.UNAUTHORIZED, "Authorization header is missing or malformed");
+        }
+
+        String token = header.replace("Bearer ", "");
         String email = jwt.getEmail(token);
         return service.me(email);
     }
