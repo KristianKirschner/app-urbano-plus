@@ -47,7 +47,10 @@ function AuthProvider({ children }) {
       });
 
     } catch (err) {
-      console.log('Erro ao cadastrar:', err);
+      if (status === 409) {
+        alert('E-mail já cadastrado!');
+      }
+      console.log('Erro ao cadastrar:', err.response);
     } finally {
       setLoadingAuth(false);
     }
