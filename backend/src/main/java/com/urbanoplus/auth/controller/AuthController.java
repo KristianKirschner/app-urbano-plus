@@ -30,13 +30,19 @@ public class AuthController {
     public Object me(HttpServletRequest req) {
         String header = req.getHeader("Authorization");
 
-        // Return 401 instead of a NullPointerException crash
         if (header == null || !header.startsWith("Bearer ")) {
             throw new AppException(HttpStatus.UNAUTHORIZED, "Authorization header is missing or malformed");
         }
 
         String token = header.replace("Bearer ", "");
-        String email = jwt.getEmail(token);
+
+        String email;
+        try {
+            email = jwt.getEmail(token);
+        } catch (Exception e) {
+            throw new AppException(HttpStatus.UNAUTHORIZED, "Invalid or expired token");
+        }
+
         return service.me(email);
     }
 }

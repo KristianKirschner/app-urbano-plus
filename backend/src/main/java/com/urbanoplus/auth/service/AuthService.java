@@ -34,7 +34,7 @@ public class AuthService {
 
     public TokenResponse login(LoginRequest req) {
         User u = repo.findByEmail(req.getEmail())
-                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new AppException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
 
         if (!encoder.matches(req.getPassword(), u.getPassword())) {
             throw new AppException(HttpStatus.UNAUTHORIZED, "Invalid credentials");

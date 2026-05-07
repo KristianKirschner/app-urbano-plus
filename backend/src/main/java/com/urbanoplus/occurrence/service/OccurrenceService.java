@@ -147,7 +147,7 @@ public class OccurrenceService {
     }
 
     public void deleteComment(Long occurrenceId, Long commentId) {
-        Comment comment = commentRepository.findById(Objects.requireNonNull(commentId))
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Comment not found"));
 
         if (!comment.getOccurrence().getId().equals(occurrenceId)) {
