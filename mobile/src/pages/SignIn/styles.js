@@ -54,11 +54,6 @@ export const Card = styled.View`
   background-color: #FFFFFF;
   border-radius: 20px;
   padding: 28px 24px;
-  shadow-color: #1B4FBB;
-  shadow-offset: 0px 8px;
-  shadow-opacity: 0.08;
-  shadow-radius: 24px;
-  elevation: 6;
 `;
 
 export const CardTitle = styled.Text`
@@ -127,11 +122,6 @@ export const SubmitButton = styled.TouchableOpacity`
   background-color: #1B4FBB;
   align-items: center;
   justify-content: center;
-  shadow-color: #1B4FBB;
-  shadow-offset: 0px 6px;
-  shadow-opacity: 0.3;
-  shadow-radius: 14px;
-  elevation: 8;
 `;
 
 export const SubmitText = styled.Text`

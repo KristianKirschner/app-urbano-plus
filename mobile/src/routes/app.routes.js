@@ -1,17 +1,82 @@
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Feather } from "@expo/vector-icons";
 
 import Home from "../pages/Home";
+import Ocorrencias from "../pages/Ocorrencias";
+import Onibus from "../pages/Onibus";
+import Perfil from "../pages/Perfil";
 
-const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
-export default function AppRoutes(){
-    return(
-        <Drawer.Navigator>
-            <Drawer.Screen 
-                name="Home"
-                component={Home}
+export default function AppRoutes() {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: "#1B4FBB",
+        tabBarInactiveTintColor: "#9AA9CC",
+        tabBarStyle: {
+          height: 60,
+          paddingTop: 6,
+          paddingBottom: 10,
+          backgroundColor: "#FFF",
+          borderTopWidth: 1,
+          borderTopColor: "#E4EAF7",
+          elevation: 8,
+        },
+        tabBarHideOnKeyboard: true,
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: "700",
+        },
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <Feather name="home" size={focused ? 22 : 20} color={color} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Ocorrências"
+        component={Ocorrencias}
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <Feather
+              name="alert-circle"
+              size={focused ? 22 : 20}
+              color={color}
             />
-        </Drawer.Navigator>
+          ),
+        }}
+      />
 
-    )
+      <Tab.Screen
+        name="Onibus"
+        component={Onibus}
+        options={{
+          title: "Ônibus",
+
+          tabBarIcon: ({ color, focused }) => (
+            <Feather name="navigation" size={focused ? 22 : 20} color={color} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Perfil"
+        component={Perfil}
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <Feather name="user" size={focused ? 22 : 20} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
 }
