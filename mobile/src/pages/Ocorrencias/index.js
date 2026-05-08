@@ -106,19 +106,16 @@ export default function Ocorrencias() {
               >
                 <View
                   style={{
-                    backgroundColor: 'white',
                     borderRadius: 999,
                     padding: 10,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    borderWidth: 1,
-                    borderColor: '#ccc',
                     elevation: 4,
                   }}
                 >
                   <MaterialCommunityIcons
                     name={icon.name}
-                    size={22}
+                    size={30}
                     color={icon.color}
                   />
                 </View>

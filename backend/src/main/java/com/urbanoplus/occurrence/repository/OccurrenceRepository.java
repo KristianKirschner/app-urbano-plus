@@ -17,4 +17,9 @@ public interface OccurrenceRepository extends JpaRepository<Occurrence, Long> {
 
     // Minhas ocorrencias
     List<Occurrence> findByUserId(Long userId);
+
+    // Latest: aprovadas, não expiradas, ordenadas por data de criação
+    List<Occurrence> findTop10ByStatusAndExpiresAtAfterOrderByCreatedAtDesc(
+            OccurrenceStatus status, LocalDateTime now
+    );
 }

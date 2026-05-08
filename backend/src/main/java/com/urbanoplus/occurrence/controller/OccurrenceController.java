@@ -43,6 +43,11 @@ public class OccurrenceController {
 
     // User
 
+    @GetMapping("/latest")
+    public List<OccurrenceResponse> listLatest() {
+        return service.listLatest();
+    }
+
     @PostMapping(consumes = "multipart/form-data")
     public OccurrenceResponse create(
             @RequestPart("data") OccurrenceRequest req,

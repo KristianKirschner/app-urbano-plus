@@ -44,6 +44,14 @@ public class OccurrenceService {
                 .stream().map(this::toCommentResponse).toList();
     }
 
+        public List<OccurrenceResponse> listLatest() {
+            return occurrenceRepository
+                    .findTop10ByStatusAndExpiresAtAfterOrderByCreatedAtDesc(
+                        OccurrenceStatus.APPROVED, LocalDateTime.now()
+                    )
+                    .stream().map(this::toResponse).toList();
+        }
+
     // User
 
     public OccurrenceResponse create(OccurrenceRequest req, List<MultipartFile> files, String email) {

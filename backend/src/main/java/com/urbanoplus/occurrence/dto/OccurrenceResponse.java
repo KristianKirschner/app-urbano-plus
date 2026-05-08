@@ -1,5 +1,6 @@
 package com.urbanoplus.occurrence.dto;
 
+import com.urbanoplus.occurrence.model.OccurrenceCategory;
 import com.urbanoplus.occurrence.model.OccurrenceStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ public class OccurrenceResponse {
     private Long id;
     private String title;
     private String description;
-    private String category;
+    private OccurrenceCategory category;
     private Double latitude;
     private Double longitude;
     private Double radius;

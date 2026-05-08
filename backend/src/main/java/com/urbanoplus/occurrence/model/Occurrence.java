@@ -21,7 +21,8 @@ public class Occurrence {
 
     private String description;
 
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private OccurrenceCategory category;
 
     private Double latitude;
 
