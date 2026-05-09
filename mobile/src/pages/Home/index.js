@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { ActivityIndicator, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import api from "../../services/api"; // ajuste o caminho se necessário
+import api from "../../services/api";
+import { AuthContext } from "../../contexts/auth";
 
 import {
   Background,
@@ -18,8 +18,6 @@ import {
   Card,
   CardHeader,
   SectionLabel,
-  SectionLink,
-  SectionLinkText,
   BusRow,
   BusRowLast,
   BusNumBadge,
@@ -30,12 +28,6 @@ import {
   BusTime,
   BusMin,
   BusHora,
-  EmptyState,
-  EmptyIconCircle,
-  EmptyTitle,
-  EmptySub,
-  EmptyButton,
-  EmptyButtonText,
   OcRow,
   OcRowLast,
   OcDot,
@@ -47,62 +39,59 @@ import {
   BadgeText,
   ConfirmBadge,
   ConfirmText,
-  MapLink,
-  MapLinkBody,
-  MapLinkTitle,
-  MapLinkSub,
-  MapIconCircle,
 } from "./styles";
 
-const STATUS_CONFIG = {
-  aberta: { label: "Aberta", bg: "#FEE8E8", color: "#C0392B", dot: "#E24B4A" },
-  em_analise: {
-    label: "Em análise",
-    bg: "#FEF5E4",
-    color: "#B7770D",
-    dot: "#BA7517",
+/**
+ * UI DAS CATEGORIAS (COR + LABEL EM PT-BR)
+ */
+const CATEGORY_MAP = {
+  TRAFFIC: {
+    label: "Trânsito",
+    color: "#f59e0b",
   },
-  resolvida: {
-    label: "Resolvida",
-    bg: "#E6F9F2",
-    color: "#0F6E56",
-    dot: "#1D9E75",
+  INFRASTRUCTURE: {
+    label: "Infraestrutura",
+    color: "#ef4444",
+  },
+  SANITATION: {
+    label: "Saneamento",
+    color: "#10b981",
+  },
+  SECURITY: {
+    label: "Segurança",
+    color: "#3b82f6",
+  },
+  ENVIRONMENT: {
+    label: "Meio ambiente",
+    color: "#22c55e",
+  },
+  OTHER: {
+    label: "Outros",
+    color: "#6B7280",
   },
 };
 
-const getGreeting = () => {
-  const h = new Date().getHours();
-  if (h < 12) return "Bom dia";
-  if (h < 18) return "Boa tarde";
+const saudacao = () => {
+  const hora = new Date().getHours();
+  if (hora < 12) return "Bom dia";
+  if (hora < 18) return "Boa tarde";
   return "Boa noite";
 };
 
-const mapStatus = (status) => {
-  const map = {
-    APPROVED: "aberta",
-    PENDING: "em_analise",
-    EXPIRED: "resolvida",
-  };
-  return map[status] ?? "aberta";
-};
-
-const formatTempo = (createdAt) => {
-  const diff = Math.floor((Date.now() - new Date(createdAt)) / 60000);
-  if (diff < 60) return `${diff} min`;
-  if (diff < 1440) return `${Math.floor(diff / 60)}h`;
-  return `${Math.floor(diff / 1440)}d`;
+const formatarTempo = (createdAt) => {
+  const minutos = Math.floor((Date.now() - new Date(createdAt)) / 60000);
+  if (minutos < 60) return `${minutos} min`;
+  if (minutos < 1440) return `${Math.floor(minutos / 60)}h`;
+  return `${Math.floor(minutos / 1440)}d`;
 };
 
 export default function HomeScreen({ navigation }) {
-  const [loadingBus, setLoadingBus] = useState(true);
-  const [loadingOc, setLoadingOc] = useState(true);
-
+  const [carregandoOnibus, setCarregandoOnibus] = useState(true);
+  const [carregandoOcorrencias, setCarregandoOcorrencias] = useState(true);
   const [linhasFavoritas, setLinhasFavoritas] = useState([]);
   const [ocorrencias, setOcorrencias] = useState([]);
 
-  const usuario = {
-    nome: "Carlos Silva",
-  };
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     setTimeout(() => {
@@ -124,224 +113,159 @@ export default function HomeScreen({ navigation }) {
           horario: "10:03",
         },
       ]);
-
-      setLoadingBus(false);
+      setCarregandoOnibus(false);
     }, 800);
   }, []);
 
-useEffect(() => {
-  const fetchOcorrencias = async () => {
-    try {
-      const { data } = await api.get('/occurrences/latest');
+  useEffect(() => {
+    const buscarOcorrencias = async () => {
+      try {
+        const { data } = await api.get("/occurrences/latest");
 
-      setOcorrencias(data.map(o => ({
-        id: o.id,
-        titulo: o.title,
-        status: mapStatus(o.status),
-        local: o.description?.slice(0, 30) ?? '',
-        tempo: formatTempo(o.createdAt),
-        confirmacoes: 0,
-      })));
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoadingOc(false);
-    }
-  };
+        const formatado = await Promise.all(
+          data.map(async (o) => {
+            try {
+              const { data: comentarios } = await api.get(
+                `/occurrences/${o.id}/comments`,
+              );
 
-  fetchOcorrencias();
-}, []);
+              return {
+                id: o.id,
+                titulo: o.title,
+                categoria: o.category,
+                local: o.description?.slice(0, 30) ?? "",
+                tempo: formatarTempo(o.createdAt),
+                confirmacoes: comentarios.length,
+              };
+            } catch {
+              return {
+                id: o.id,
+                titulo: o.title,
+                categoria: o.category,
+                local: o.description?.slice(0, 30) ?? "",
+                tempo: formatarTempo(o.createdAt),
+                confirmacoes: 0,
+              };
+            }
+          }),
+        );
 
-  const renderBusRow = (item, index, arr) => {
-    const isLast = index === arr.length - 1;
-    const RowComponent = isLast ? BusRowLast : BusRow;
+        setOcorrencias(formatado);
+      } catch (erro) {
+        console.error("Erro ao buscar ocorrências:", erro);
+      } finally {
+        setCarregandoOcorrencias(false);
+      }
+    };
+
+    buscarOcorrencias();
+  }, []);
+
+  const renderizarOcorrencia = (item, index, lista) => {
+    const ultimo = index === lista.length - 1;
+    const Linha = ultimo ? OcRowLast : OcRow;
+
+    const ui = CATEGORY_MAP[item.categoria] ?? CATEGORY_MAP.OTHER;
 
     return (
-      <RowComponent
+      <Linha
         key={item.id}
         activeOpacity={0.7}
-        onPress={() => navigation.navigate("Ocorrencias")}
+        onPress={() =>
+          navigation.navigate("Ocorrencias", { ocorrenciaId: item.id })
+        }
       >
+        <OcDot color={ui.color} />
+
+        <OcBody>
+          <OcTitle>{item.titulo}</OcTitle>
+
+          <OcMeta>
+            <Badge>
+              <BadgeText>{ui.label}</BadgeText>
+            </Badge>
+
+            <OcTime>{item.local}</OcTime>
+          </OcMeta>
+        </OcBody>
+
+        <ConfirmBadge>
+          <Feather name="message-circle" size={10} color="#7A8FC4" />
+          <ConfirmText>{item.confirmacoes}</ConfirmText>
+        </ConfirmBadge>
+      </Linha>
+    );
+  };
+
+  const renderizarOnibus = (item, index, lista) => {
+    const ultimo = index === lista.length - 1;
+    const Linha = ultimo ? BusRowLast : BusRow;
+
+    return (
+      <Linha key={item.id} onPress={() => navigation.navigate("Ocorrencias")}>
         <BusNumBadge>
           <BusNumText>{item.numero}</BusNumText>
         </BusNumBadge>
 
         <BusInfo>
           <BusDest>{item.destino}</BusDest>
-
-          <BusPonto>
-            <Feather name="map-pin" size={10} color="#8A9BC4" /> {item.ponto}
-          </BusPonto>
+          <BusPonto>{item.ponto}</BusPonto>
         </BusInfo>
 
         <BusTime>
-          <BusMin warn={item.minutos > 15}>{item.minutos} min</BusMin>
-
+          <BusMin>{item.minutos} min</BusMin>
           <BusHora>{item.horario}</BusHora>
         </BusTime>
-      </RowComponent>
-    );
-  };
-
-  const renderOcRow = (item, index, arr) => {
-    const isLast = index === arr.length - 1;
-    const RowComponent = isLast ? OcRowLast : OcRow;
-
-    const cfg = STATUS_CONFIG[item.status];
-
-    return (
-      <RowComponent
-        key={item.id}
-        activeOpacity={0.7}
-        onPress={() =>
-          navigation.navigate("Ocorrencias", {
-            ocorrenciaId: item.id,
-          })
-        }
-      >
-        <OcDot color={cfg.dot} />
-
-        <OcBody>
-          <OcTitle>{item.titulo}</OcTitle>
-
-          <OcMeta>
-            <Badge bg={cfg.bg}>
-              <BadgeText color={cfg.color}>{cfg.label}</BadgeText>
-            </Badge>
-
-            <OcTime>
-              {item.local} · {item.tempo}
-            </OcTime>
-          </OcMeta>
-        </OcBody>
-
-        <ConfirmBadge>
-          <Feather name="thumbs-up" size={10} color="#7A8FC4" />
-
-          <ConfirmText>{item.confirmacoes}</ConfirmText>
-        </ConfirmBadge>
-      </RowComponent>
+      </Linha>
     );
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#1B4FBB" }}>
-      <StatusBar barStyle="light-content" backgroundColor="#1B4FBB" />
+      <StatusBar barStyle="light-content" />
 
       <Background>
         <TopAccent />
 
         <Header>
-          <GreetingText>{getGreeting()}</GreetingText>
-
-          <UserName>{usuario.nome}</UserName>
+          <GreetingText>{saudacao()}</GreetingText>
+          <UserName>{user?.name}</UserName>
 
           <LocationRow>
             <Feather name="map-pin" size={11} color="#90AADF" />
-
             <LocationText>Ourinhos, SP</LocationText>
           </LocationRow>
         </Header>
 
-        <ScrollContent
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: 14,
-          }}
-        >
+        <ScrollContent>
           <ContentPad>
             <Card>
               <CardHeader>
-                <SectionLabel>Ônibus — favoritas</SectionLabel>
-
-                <SectionLink
-                  activeOpacity={0.7}
-                  onPress={() => navigation.navigate("Onibus")}
-                >
-                  <SectionLinkText>
-                    {linhasFavoritas.length === 0
-                      ? "explorar linhas"
-                      : "ver todas"}
-                  </SectionLinkText>
-                </SectionLink>
+                <SectionLabel>Ônibus</SectionLabel>
               </CardHeader>
 
-              {loadingBus ? (
-                <ActivityIndicator
-                  size="small"
-                  color="#1B4FBB"
-                  style={{ paddingVertical: 16 }}
-                />
-              ) : linhasFavoritas.length === 0 ? (
-                <EmptyState>
-                  <EmptyIconCircle>
-                    <Feather name="navigation" size={20} color="#1B4FBB" />
-                  </EmptyIconCircle>
-
-                  <EmptyTitle>Nenhuma linha favorita ainda</EmptyTitle>
-
-                  <EmptySub>
-                    Adicione suas linhas mais usadas para ver os horários direto
-                    aqui.
-                  </EmptySub>
-
-                  <EmptyButton
-                    activeOpacity={0.8}
-                    onPress={() => navigation.navigate("Onibus")}
-                  >
-                    <EmptyButtonText>
-                      + Adicionar linha favorita
-                    </EmptyButtonText>
-                  </EmptyButton>
-                </EmptyState>
+              {carregandoOnibus ? (
+                <ActivityIndicator />
               ) : (
-                linhasFavoritas.map((item, index, arr) =>
-                  renderBusRow(item, index, arr),
+                linhasFavoritas.map((item, i, arr) =>
+                  renderizarOnibus(item, i, arr),
                 )
               )}
             </Card>
 
             <Card>
               <CardHeader>
-                <SectionLabel>Últimas ocorrências</SectionLabel>
-
-                <SectionLink
-                  activeOpacity={0.7}
-                  onPress={() => navigation.navigate("Ocorrencias")}
-                >
-                  <SectionLinkText>ver todas</SectionLinkText>
-                </SectionLink>
+                <SectionLabel>Ultimas Ocorrências</SectionLabel>
               </CardHeader>
 
-              {loadingOc ? (
-                <ActivityIndicator
-                  size="small"
-                  color="#1B4FBB"
-                  style={{ paddingVertical: 16 }}
-                />
+              {carregandoOcorrencias ? (
+                <ActivityIndicator />
               ) : (
-                ocorrencias.map((item, index, arr) =>
-                  renderOcRow(item, index, arr),
+                ocorrencias.map((item, i, arr) =>
+                  renderizarOcorrencia(item, i, arr),
                 )
               )}
             </Card>
-
-            <MapLink
-              activeOpacity={0.8}
-              onPress={() => navigation.navigate("Mapa")}
-            >
-              <MapIconCircle>
-                <Feather name="map" size={18} color="#1B4FBB" />
-              </MapIconCircle>
-
-              <MapLinkBody>
-                <MapLinkTitle>Mapa da cidade</MapLinkTitle>
-
-                <MapLinkSub>Ver ocorrências e pontos no mapa</MapLinkSub>
-              </MapLinkBody>
-
-              <Feather name="chevron-right" size={18} color="#B0BDD8" />
-            </MapLink>
           </ContentPad>
         </ScrollContent>
       </Background>

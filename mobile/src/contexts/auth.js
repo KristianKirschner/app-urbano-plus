@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from 'react';
 import api from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const AuthContext = createContext(null);
+export const AuthContext = createContext();
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -56,35 +56,22 @@ function AuthProvider({ children }) {
     }
   }
 
-  async function signIn(email, password) {
-    setLoadingAuth(true);
+ async function signIn(email, password) {
+  const response = await api.post('/login', {
+    email,
+    password,
+  });
 
-    try {
-      const response = await api.post('/login', {
-        email,
-        password,
-      });
+  const { token } = response.data;
 
-      const { id, name, token } = response.data;
+  await AsyncStorage.setItem('@finToken', token);
 
-      await AsyncStorage.setItem('@finToken', token);
+  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  const me = await api.get('/me');
 
-      setUser({
-        id,
-        name,
-        email,
-      });
-
-      console.log('Login OK:', response.data);
-
-    } catch (err) {
-      console.log('Erro login:', err);
-    } finally {
-      setLoadingAuth(false);
-    }
-  }
+  setUser(me.data);
+}
 
   async function logOut() {
     await AsyncStorage.removeItem('@finToken');

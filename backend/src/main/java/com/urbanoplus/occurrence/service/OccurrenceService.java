@@ -46,7 +46,7 @@ public class OccurrenceService {
 
         public List<OccurrenceResponse> listLatest() {
             return occurrenceRepository
-                    .findTop10ByStatusAndExpiresAtAfterOrderByCreatedAtDesc(
+                    .findTop5ByStatusAndExpiresAtAfterOrderByCreatedAtDesc(
                         OccurrenceStatus.APPROVED, LocalDateTime.now()
                     )
                     .stream().map(this::toResponse).toList();

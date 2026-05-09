@@ -43,7 +43,7 @@ export default function AppRoutes() {
       />
 
       <Tab.Screen
-        name="Ocorrências"
+        name="Ocorrencias"
         component={Ocorrencias}
         options={{
           tabBarIcon: ({ color, focused }) => (
