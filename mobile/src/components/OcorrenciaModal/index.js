@@ -38,17 +38,27 @@ import {
 import api from "../../services/api";
 
 const TYPE_CONFIG = {
-  ROUBO: { icon: "alert", color: "#e53935", label: "Roubo", bg: "#fdecea" },
-  ACIDENTE: { icon: "car-emergency", color: "#fb8c00", label: "Acidente", bg: "#fff3e0" },
-  BARULHO: { icon: "volume-high", color: "#1e88e5", label: "Barulho", bg: "#e3f2fd" },
-  INCENDIO: { icon: "fire", color: "#d32f2f", label: "Incêndio", bg: "#ffebee" },
+  ROUBO:    { icon: "alert",          color: "#e53935", label: "Roubo",     bg: "#fdecea" },
+  ACIDENTE: { icon: "car-emergency",  color: "#fb8c00", label: "Acidente",  bg: "#fff3e0" },
+  BARULHO:  { icon: "volume-high",    color: "#1e88e5", label: "Barulho",   bg: "#e3f2fd" },
+  INCENDIO: { icon: "fire",           color: "#d32f2f", label: "Incêndio",  bg: "#ffebee" },
 };
 
-const getConfig = (tipo) =>
-  TYPE_CONFIG[tipo] ?? {
+const CATEGORY_CONFIG = {
+  TRAFFIC:        { icon: "car",               color: "#f59e0b", label: "Trânsito",       bg: "#fef3c7" },
+  INFRASTRUCTURE: { icon: "hammer-wrench",     color: "#ef4444", label: "Infraestrutura", bg: "#fee2e2" },
+  SANITATION:     { icon: "trash-can-outline", color: "#10b981", label: "Saneamento",     bg: "#d1fae5" },
+  SECURITY:       { icon: "shield-outline",    color: "#3b82f6", label: "Segurança",      bg: "#dbeafe" },
+  ENVIRONMENT:    { icon: "leaf",              color: "#22c55e", label: "Meio ambiente",  bg: "#dcfce7" },
+  OTHER:          { icon: "alert-circle",      color: "#6b7280", label: "Outras",         bg: "#f3f4f6" },
+};
+
+const getConfig = (item) =>
+  CATEGORY_CONFIG[item?.category] ??
+  TYPE_CONFIG[item?.type] ?? {
     icon: "alert-circle",
     color: "#555",
-    label: tipo,
+    label: item?.category ?? item?.type ?? "Ocorrência",
     bg: "#f5f5f5",
   };
 
@@ -110,7 +120,7 @@ export default function OcorrenciaModal({ item, visible, onClose }) {
 
   if (!item) return null;
 
-  const cfg = getConfig(item.type);
+  const cfg = getConfig(item);
   const data = details ?? item;
 
   return (
@@ -169,17 +179,19 @@ export default function OcorrenciaModal({ item, visible, onClose }) {
                     </MetaRow>
                   </Section>
 
-                  {data.photos?.length > 0 && (
+                  {data.photoUrls?.length > 0 && (
                     <Section>
-                      <SectionTitle>Fotos ({data.photos.length})</SectionTitle>
+                      <SectionTitle>Fotos ({data.photoUrls.length})</SectionTitle>
 
                       <FlatList
-                        data={data.photos}
+                        data={data.photoUrls}
                         horizontal
-                        keyExtractor={(p, i) => String(p.id ?? i)}
+                        keyExtractor={(_, i) => String(i)}
                         showsHorizontalScrollIndicator={false}
-                        renderItem={({ item: photo }) => (
-                          <PhotoImage source={{ uri: photo.url }} />
+                        renderItem={({ item: url }) => (
+                          <PhotoImage
+                            source={{ uri: `${api.defaults.baseURL}${url}` }}
+                          />
                         )}
                         ListFooterComponent={<PhotoListContent />}
                       />

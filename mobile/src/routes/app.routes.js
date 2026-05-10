@@ -1,7 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Home from "../pages/Home";
 import Ocorrencias from "../pages/Ocorrencias";
 import Onibus from "../pages/Onibus";
@@ -10,6 +10,7 @@ import Perfil from "../pages/Perfil";
 const Tab = createBottomTabNavigator();
 
 export default function AppRoutes() {
+    const insets = useSafeAreaInsets();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -17,13 +18,15 @@ export default function AppRoutes() {
         tabBarActiveTintColor: "#1B4FBB",
         tabBarInactiveTintColor: "#9AA9CC",
         tabBarStyle: {
-          height: 60,
-          paddingTop: 6,
-          paddingBottom: 10,
-          backgroundColor: "#FFF",
-          borderTopWidth: 1,
-          borderTopColor: "#E4EAF7",
-          elevation: 8,
+          tabBarStyle: {
+            height: 60 + insets.bottom,
+            paddingTop: 6,
+            paddingBottom: insets.bottom || 10,
+            backgroundColor: "#FFF",
+            borderTopWidth: 1,
+            borderTopColor: "#E4EAF7",
+            elevation: 8,
+          },
         },
         tabBarHideOnKeyboard: true,
         tabBarLabelStyle: {

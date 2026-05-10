@@ -9,34 +9,61 @@ export default {
     icon: "./assets/icon.png",
     userInterfaceStyle: "light",
     newArchEnabled: true,
+
     splash: {
       image: "./assets/splash-icon.png",
       resizeMode: "contain",
       backgroundColor: "#ffffff"
     },
+
     ios: {
       supportsTablet: true,
       config: {
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY
+      },
+      infoPlist: {
+        NSPhotoLibraryUsageDescription:
+          "Permitir acesso às fotos para anexar imagens nas ocorrências.",
+        NSCameraUsageDescription:
+          "Permitir acesso à câmera para tirar fotos das ocorrências."
       }
     },
+
     android: {
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#ffffff"
       },
       edgeToEdgeEnabled: true,
+
       config: {
         googleMaps: {
           apiKey: process.env.GOOGLE_MAPS_API_KEY
         }
-      }
+      },
+
+      permissions: [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "CAMERA"
+      ]
     },
+
     web: {
       favicon: "./assets/favicon.png"
     },
+
     plugins: [
-      "expo-font"
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          photosPermission:
+            "Permitir acesso às fotos para anexar imagens nas ocorrências.",
+          cameraPermission:
+            "Permitir acesso à câmera para tirar fotos das ocorrências."
+        }
+      ]
     ]
   }
 };
