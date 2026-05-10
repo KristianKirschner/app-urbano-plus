@@ -10,7 +10,7 @@ import Perfil from "../pages/Perfil";
 const Tab = createBottomTabNavigator();
 
 export default function AppRoutes() {
-    const insets = useSafeAreaInsets();
+  const insets = useSafeAreaInsets();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -18,15 +18,13 @@ export default function AppRoutes() {
         tabBarActiveTintColor: "#1B4FBB",
         tabBarInactiveTintColor: "#9AA9CC",
         tabBarStyle: {
-          tabBarStyle: {
-            height: 60 + insets.bottom,
-            paddingTop: 6,
-            paddingBottom: insets.bottom || 10,
-            backgroundColor: "#FFF",
-            borderTopWidth: 1,
-            borderTopColor: "#E4EAF7",
-            elevation: 8,
-          },
+          height: 60 + insets.bottom,
+          paddingTop: 6,
+          paddingBottom: insets.bottom || 10,
+          backgroundColor: "#FFF",
+          borderTopWidth: 1,
+          borderTopColor: "#E4EAF7",
+          elevation: 8,
         },
         tabBarHideOnKeyboard: true,
         tabBarLabelStyle: {
