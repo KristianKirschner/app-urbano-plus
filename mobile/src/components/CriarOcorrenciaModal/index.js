@@ -16,7 +16,7 @@ import { Feather } from "@expo/vector-icons";
 import api from "../../services/api";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-const SHEET_HEIGHT = SCREEN_HEIGHT * 0.65;
+const SHEET_HEIGHT = SCREEN_HEIGHT * 0.45;
 
 const c = {
   bg: "#FFFFFF",
