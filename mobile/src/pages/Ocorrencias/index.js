@@ -9,6 +9,7 @@ import api from '../../services/api';
 import OcorrenciaModal from '../../components/OcorrenciaModal';
 import CriarOcorrenciaModal from '../../components/CriarOcorrenciaModal';
 import { Feather } from '@expo/vector-icons';
+import * as Location from 'expo-location';
 
 const Container = styled.View`flex: 1;`;
 const LoadingContainer = styled.View`flex: 1; justify-content: center; align-items: center;`;
@@ -60,6 +61,19 @@ export default function Ocorrencias({ route, navigation }) {
   const [newCoordinate, setNewCoordinate] = useState(null);
   const [previewRadius, setPreviewRadius] = useState(null);
 
+useEffect(() => {
+  (async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+
+    if (status !== 'granted') {
+      Alert.alert(
+        'Permissão necessária',
+        'Ative a localização para ver sua posição no mapa'
+      );
+    }
+  })();
+}, []);
+
   useEffect(() => {
     if (!route.params?.ocorrenciaId || ocorrencias.length === 0) return;
     const ocorrencia = ocorrencias.find((o) => o.id === route.params.ocorrenciaId);
@@ -110,6 +124,8 @@ export default function Ocorrencias({ route, navigation }) {
         showsMyLocationButton={false}
         toolbarEnabled={false}
         onLongPress={handleLongPress}
+        showsUserLocation={true}
+        followsUserLocation={true}
       >
         {/* ── Marker + Circle de preview (nova ocorrência) ─────────────── */}
         {newCoordinate && (

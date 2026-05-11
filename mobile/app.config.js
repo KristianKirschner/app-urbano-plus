@@ -45,7 +45,8 @@ export default {
       permissions: [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
-        "CAMERA"
+        "CAMERA",
+        "ACCESS_FINE_LOCATION"
       ]
     },
 
