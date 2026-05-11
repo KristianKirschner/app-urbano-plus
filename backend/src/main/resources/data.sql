@@ -76,12 +76,6 @@ status, rejection_reason, created_at, approved_at, expires_at, user_id
  'PENDING', NULL,
  NOW() - INTERVAL '30 minutes', NULL, NULL, 2),
 
-('Possível atividade criminosa',
- 'Movimentação suspeita em área residencial.',
- 'SECURITY', -22.9748, -49.8740, 200.0,
- 'APPROVED', NULL,
- NOW() - INTERVAL '30 minutes', NOW() - INTERVAL '15 minutes', NOW() + INTERVAL '23 hours', 3),
-
 ('Árvore caída após temporal',
  'Árvore bloqueando a calçada.',
  'ENVIRONMENT', -22.9790, -49.8730, 30.0,

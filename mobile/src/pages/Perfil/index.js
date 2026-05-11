@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from "react";
-import { Alert, ActivityIndicator } from "react-native";
+import { Alert, ActivityIndicator, View, Text } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
@@ -32,17 +32,17 @@ import {
 } from "./styles";
 
 const STATUS_CONFIG = {
-  APPROVED: { label: "Aprovada",  color: c.success, bg: c.successLight },
-  PENDING:  { label: "Pendente",  color: c.warning, bg: c.warningLight },
-  REJECTED: { label: "Rejeitada", color: c.danger,  bg: c.dangerLight  },
-  EXPIRED:  { label: "Expirada",  color: c.gray,    bg: c.grayLight    },
+  APPROVED: { label: "Aprovada", color: c.success, bg: c.successLight },
+  PENDING: { label: "Pendente", color: c.warning, bg: c.warningLight },
+  REJECTED: { label: "Rejeitada", color: c.danger, bg: c.dangerLight },
+  EXPIRED: { label: "Expirada", color: c.gray, bg: c.grayLight },
 };
 
 export default function Perfil() {
   const { user, logOut } = useContext(AuthContext);
   const [occurrences, setOccurrences] = useState([]);
-  const [loading, setLoading]         = useState(true);
-  const [reopening, setReopening]     = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [reopening, setReopening] = useState(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -81,23 +81,27 @@ export default function Perfil() {
     ]);
   }
 
-  const total    = occurrences.length;
+  const total = occurrences.length;
   const approved = occurrences.filter((o) => o.status === "APPROVED").length;
   const rejected = occurrences.filter((o) => o.status === "REJECTED").length;
 
-  const initials = user?.name
-    ?.split(" ")
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase() ?? "?";
+  const initials =
+    user?.name
+      ?.split(" ")
+      .map((w) => w[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() ?? "?";
 
   return (
     <Container>
       <HeaderBg>
         <AvatarWrapper>
-          <UserName style={{ fontSize: 26, marginBottom: 0 }}>{initials}</UserName>
+          <UserName style={{ fontSize: 26, marginBottom: 0 }}>
+            {initials}
+          </UserName>
         </AvatarWrapper>
+
         <UserName>{user?.name ?? "Usuário"}</UserName>
         <UserEmail>{user?.email ?? ""}</UserEmail>
       </HeaderBg>
@@ -107,10 +111,12 @@ export default function Perfil() {
           <StatNumber color={c.accent}>{total}</StatNumber>
           <StatLabel>Total</StatLabel>
         </StatCard>
+
         <StatCard>
           <StatNumber color={c.success}>{approved}</StatNumber>
           <StatLabel>Aprovadas</StatLabel>
         </StatCard>
+
         <StatCard>
           <StatNumber color={c.danger}>{rejected}</StatNumber>
           <StatLabel>Rejeitadas</StatLabel>
@@ -126,16 +132,25 @@ export default function Perfil() {
           style={{ marginTop: 24 }}
         />
       ) : occurrences.length === 0 ? (
-        <EmptyText>Você ainda não criou nenhuma ocorrência.</EmptyText>
+        <EmptyText>
+          Você ainda não criou nenhuma ocorrência.
+        </EmptyText>
       ) : (
         occurrences.map((item) => {
-          const cfg = STATUS_CONFIG[item.status] ?? STATUS_CONFIG.PENDING;
+          const cfg =
+            STATUS_CONFIG[item.status] ?? STATUS_CONFIG.PENDING;
+
           return (
             <OccurrenceCard key={item.id}>
               <OccurrenceRow>
-                <OccurrenceTitle numberOfLines={2}>{item.title}</OccurrenceTitle>
+                <OccurrenceTitle numberOfLines={2}>
+                  {item.title}
+                </OccurrenceTitle>
+
                 <StatusBadge bg={cfg.bg}>
-                  <StatusText color={cfg.color}>{cfg.label}</StatusText>
+                  <StatusText color={cfg.color}>
+                    {cfg.label}
+                  </StatusText>
                 </StatusBadge>
               </OccurrenceRow>
 
@@ -143,15 +158,52 @@ export default function Perfil() {
                 {new Date(item.createdAt).toLocaleString("pt-BR")}
               </OccurrenceDate>
 
+              {/* 🔴 REJECTION REASON */}
+              {item.status === "REJECTED" && item.rejectionReason && (
+                <View
+                  style={{
+                    marginTop: 10,
+                    padding: 10,
+                    borderRadius: 10,
+                    backgroundColor: c.dangerLight,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontWeight: "700",
+                      color: c.danger,
+                      marginBottom: 4,
+                    }}
+                  >
+                    Motivo da rejeição
+                  </Text>
+
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: c.textSub,
+                    }}
+                  >
+                    {item.rejectionReason}
+                  </Text>
+                </View>
+              )}
+
               {item.status === "EXPIRED" && (
                 <ReopenBtn
                   onPress={() => handleReopen(item.id)}
                   disabled={reopening === item.id}
                 >
                   {reopening === item.id ? (
-                    <ActivityIndicator size="small" color={c.accent} />
+                    <ActivityIndicator
+                      size="small"
+                      color={c.accent}
+                    />
                   ) : (
-                    <ReopenBtnText>Reabrir ocorrência</ReopenBtnText>
+                    <ReopenBtnText>
+                      Reabrir ocorrência
+                    </ReopenBtnText>
                   )}
                 </ReopenBtn>
               )}
