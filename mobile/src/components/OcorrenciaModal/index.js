@@ -66,19 +66,26 @@ const getConfig = (item) =>
   };
 
 function formatarTempo(data) {
-  const diff = Date.now() - new Date(data).getTime();
-  const minutos = Math.floor(diff / 60000);
+  if (!data) return "";
 
-  if (minutos < 1) return "agora";
-  if (minutos < 60) return `${minutos} min atrás`;
+  const dataCorrigida = data.endsWith("Z") ? data : `${data}Z`;
+
+  const diff = Date.now() - new Date(dataCorrigida).getTime();
+
+  const minutos = Math.max(1, Math.floor(diff / 60000));
+
+  if (minutos < 60) {
+    return `${minutos} min atrás`;
+  }
 
   const horas = Math.floor(minutos / 60);
-  if (horas < 24) return `${horas}h atrás`;
+  const minutosRestantes = minutos % 60;
 
-  const dias = Math.floor(horas / 24);
-  if (dias === 1) return "ontem";
+  if (minutosRestantes === 0) {
+    return `${horas}h atrás`;
+  }
 
-  return `${dias} dias atrás`;
+  return `${horas}h ${minutosRestantes}min atrás`;
 }
 
 function getInitials(name) {

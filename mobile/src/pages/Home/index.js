@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { ActivityIndicator, StatusBar } from "react-native";
+import { ActivityIndicator } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 
@@ -170,7 +171,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#0B49B7" }}>
-      <StatusBar barStyle="light-content" backgroundColor="#0B49B7" />
+      <StatusBar style="dark" backgroundColor="#0B49B7" translucent={false} />
 
       <Background>
         <TopAccent />
@@ -189,7 +190,7 @@ export default function HomeScreen({ navigation }) {
 
           <MainAction
             activeOpacity={0.86}
-            onPress={() => navigation.navigate("NovaOcorrencia")}
+            onPress={() => navigation.navigate("Ocorrencias")}
           >
             <MainActionIcon>
               <Feather name="plus" size={22} color="#0B49B7" />

@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import "dotenv/config";
 
 export default {
   expo: {
@@ -10,48 +10,57 @@ export default {
     userInterfaceStyle: "light",
     newArchEnabled: true,
 
+    androidStatusBar: {
+      backgroundColor: "#0B49B7",
+      barStyle: "light-content",
+      translucent: false,
+    },
+
+    androidNavigationBar: {
+      backgroundColor: "#FFFFFF",
+      barStyle: "dark-content",
+    },
+
     splash: {
       image: "./assets/splash-icon.png",
       resizeMode: "contain",
-      backgroundColor: "#ffffff"
+      backgroundColor: "#ffffff",
     },
 
     ios: {
       supportsTablet: true,
       config: {
-        googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY
+        googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
       },
       infoPlist: {
         NSPhotoLibraryUsageDescription:
           "Permitir acesso às fotos para anexar imagens nas ocorrências.",
         NSCameraUsageDescription:
-          "Permitir acesso à câmera para tirar fotos das ocorrências."
-      }
+          "Permitir acesso à câmera para tirar fotos das ocorrências.",
+      },
     },
 
     android: {
+      edgeToEdgeEnabled: false,
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
       },
-      edgeToEdgeEnabled: false,
-
       config: {
         googleMaps: {
-          apiKey: process.env.GOOGLE_MAPS_API_KEY
-        }
+          apiKey: process.env.GOOGLE_MAPS_API_KEY,
+        },
       },
-
       permissions: [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
         "CAMERA",
-        "ACCESS_FINE_LOCATION"
-      ]
+        "ACCESS_FINE_LOCATION",
+      ],
     },
 
     web: {
-      favicon: "./assets/favicon.png"
+      favicon: "./assets/favicon.png",
     },
 
     plugins: [
@@ -62,9 +71,9 @@ export default {
           photosPermission:
             "Permitir acesso às fotos para anexar imagens nas ocorrências.",
           cameraPermission:
-            "Permitir acesso à câmera para tirar fotos das ocorrências."
-        }
-      ]
-    ]
-  }
+            "Permitir acesso à câmera para tirar fotos das ocorrências.",
+        },
+      ],
+    ],
+  },
 };
