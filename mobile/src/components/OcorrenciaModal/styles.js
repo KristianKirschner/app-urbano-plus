@@ -177,7 +177,7 @@ export const InputArea = styled.View`
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 72px;
 
   flex-direction: row;
   align-items: flex-end;

@@ -379,7 +379,7 @@ export default function OcorrenciaModal({ item, visible, onClose }) {
           ) : null
         }
         contentContainerStyle={{
-          paddingBottom: 110,
+          paddingBottom: 180,
         }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
