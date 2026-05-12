@@ -170,58 +170,66 @@ export const EmptyText = styled.Text`
   font-weight: 600;
   color: #8a9bc4;
   text-align: center;
-  margin: 12px 22px 24px 22px;
+  margin: 12px 22px 18px 22px;
 `;
 
 export const InputArea = styled.View`
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 72px;
-
   flex-direction: row;
   align-items: flex-end;
-  padding: 12px 18px 18px 18px;
+
+  margin: 8px 22px 28px 22px;
+  padding: 10px 12px;
 
   background-color: #ffffff;
-  border-top-width: 1px;
-  border-top-color: #edf1fa;
+  border-radius: 28px;
+
+  border-width: 1px;
+  border-color: #e1e8f8;
+
+  shadow-color: #0b49b7;
+  shadow-offset: 0px 8px;
+  shadow-opacity: 0.08;
+  shadow-radius: 18px;
+
+  elevation: 5;
 `;
 
 export const CommentInputWrapper = styled.View`
   flex: 1;
-  min-height: 48px;
+  min-height: 46px;
   max-height: 104px;
+
   background-color: #f4f6fd;
   border-radius: 22px;
+
   padding: 0 14px;
+
   border-width: 1px;
   border-color: #dfe7f7;
 `;
 
 export const SendButton = styled.TouchableOpacity`
-  width: 48px;
-  height: 48px;
-  border-radius: 24px;
+  width: 46px;
+  height: 46px;
+  border-radius: 23px;
+
   background-color: #0b49b7;
+
   align-items: center;
   justify-content: center;
-  margin-left: 10px;
 
-  shadow-color: #0b49b7;
-  shadow-offset: 0px 6px;
-  shadow-opacity: 0.2;
-  shadow-radius: 10px;
-
-  elevation: 5;
+  margin-left: 9px;
 `;
 
 export const SendButtonDisabled = styled.TouchableOpacity`
-  width: 48px;
-  height: 48px;
-  border-radius: 24px;
+  width: 46px;
+  height: 46px;
+  border-radius: 23px;
+
   background-color: #cbd5e8;
+
   align-items: center;
   justify-content: center;
-  margin-left: 10px;
+
+  margin-left: 9px;
 `;
