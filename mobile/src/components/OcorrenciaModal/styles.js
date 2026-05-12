@@ -1,84 +1,91 @@
 import styled from "styled-components/native";
-import { Dimensions } from "react-native";
+import BottomSheet from "@gorhom/bottom-sheet";
 
-const { width, height } = Dimensions.get("window");
+export const Sheet = styled(BottomSheet)`
+  shadow-color: #000000;
+  shadow-offset: 0px -8px;
+  shadow-opacity: 0.14;
+  shadow-radius: 18px;
 
-export const Overlay = styled.View`
-  flex: 1;
-  background-color: rgba(0, 0, 0, 0.55);
-  justify-content: flex-end;
-`;
-
-export const Sheet = styled.View`
-  background-color: #fff;
-  border-top-left-radius: 24px;
-  border-top-right-radius: 24px;
-  max-height: ${height * 0.88}px;
-  overflow: hidden;
+  elevation: 14;
 `;
 
 export const Handle = styled.View`
-  width: 40px;
-  height: 4px;
-  border-radius: 2px;
-  background-color: #ddd;
   align-self: center;
-  margin-top: 12px;
+  width: 42px;
+  height: 5px;
+  border-radius: 999px;
+  background-color: #d8deea;
+  margin-top: 10px;
   margin-bottom: 8px;
 `;
 
 export const Header = styled.View`
   flex-direction: row;
-  align-items: center;
-  padding: 12px 20px 16px;
+  align-items: flex-start;
+  padding: 4px 22px 18px 22px;
   border-bottom-width: 1px;
-  border-bottom-color: #f0f0f0;
-`;
-
-export const TypeBadge = styled.View`
-  flex-direction: row;
-  align-items: center;
-  padding: 6px 12px;
-  border-radius: 20px;
-  background-color: ${(p) => p.bg};
-  margin-right: 12px;
-`;
-
-export const TypeLabel = styled.Text`
-  font-size: 13px;
-  font-weight: 700;
-  color: ${(p) => p.color};
-  margin-left: 6px;
-`;
-
-export const TitleText = styled.Text`
-  flex: 1;
-  font-size: 17px;
-  font-weight: 700;
-  color: #1a1a1a;
+  border-bottom-color: #edf1fa;
 `;
 
 export const CloseButton = styled.TouchableOpacity`
-  padding: 4px;
+  width: 38px;
+  height: 38px;
+  border-radius: 19px;
+  background-color: #f4f6fd;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const TypeBadge = styled.View`
+  align-self: flex-start;
+  flex-direction: row;
+  align-items: center;
+  background-color: ${(props) => props.bg || "#eef4ff"};
+  border-radius: 999px;
+  padding: 7px 11px;
+  margin-bottom: 10px;
+`;
+
+export const TypeLabel = styled.Text`
+  font-size: 11px;
+  font-weight: 900;
+  color: ${(props) => props.color || "#0b49b7"};
+  margin-left: 5px;
+`;
+
+export const TitleText = styled.Text`
+  font-size: 19px;
+  font-weight: 900;
+  color: #132f6b;
+  line-height: 24px;
+`;
+
+export const LoadingWrapper = styled.View`
+  padding: 38px 0;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const Section = styled.View`
-  padding: 16px 20px 0;
+  padding: 18px 22px 0 22px;
 `;
 
 export const SectionTitle = styled.Text`
   font-size: 12px;
-  font-weight: 700;
-  color: #999;
-  letter-spacing: 1px;
+  font-weight: 900;
+  color: #7a8fc4;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 `;
 
 export const Description = styled.Text`
   font-size: 15px;
-  color: #333;
-  line-height: 22px;
+  font-weight: 600;
+  color: #26344f;
+  line-height: 21px;
+  margin-bottom: 12px;
 `;
 
 export const MetaRow = styled.View`
@@ -88,90 +95,133 @@ export const MetaRow = styled.View`
 `;
 
 export const MetaText = styled.Text`
-  font-size: 13px;
-  color: #777;
-  margin-left: 6px;
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  color: #7c8aa6;
+  margin-left: 7px;
 `;
 
 export const PhotoImage = styled.Image`
-  width: ${width * 0.58}px;
-  height: 160px;
-  border-radius: 12px;
+  width: 132px;
+  height: 94px;
+  border-radius: 18px;
   margin-right: 10px;
+  background-color: #eef2fb;
 `;
 
 export const PhotoListContent = styled.View`
-  padding-bottom: 4px;
+  width: 12px;
 `;
 
 export const CommentCard = styled.View`
-  background-color: #f8f8f8;
-  border-radius: 12px;
-  padding: 12px 14px;
+  background-color: #f8faff;
+  border-radius: 20px;
+  padding: 14px;
+  margin: 0 22px 12px 22px;
+  border-width: 1px;
+  border-color: #edf1fa;
+`;
+
+export const CommentHeader = styled.View`
+  flex-direction: row;
+  align-items: center;
   margin-bottom: 10px;
+`;
+
+export const CommentAvatar = styled.View`
+  width: 34px;
+  height: 34px;
+  border-radius: 17px;
+  background-color: #eef4ff;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+`;
+
+export const CommentAvatarText = styled.Text`
+  font-size: 12px;
+  font-weight: 900;
+  color: #0b49b7;
 `;
 
 export const CommentAuthor = styled.Text`
   font-size: 13px;
-  font-weight: 700;
-  color: #222;
-  margin-bottom: 4px;
+  font-weight: 900;
+  color: #26344f;
 `;
 
 export const CommentBody = styled.Text`
   font-size: 14px;
-  color: #444;
+  font-weight: 600;
+  color: #46546f;
   line-height: 20px;
 `;
 
 export const CommentDate = styled.Text`
   font-size: 11px;
-  color: #aaa;
-  margin-top: 6px;
-  text-align: right;
+  font-weight: 600;
+  color: #9aa9cc;
+  margin-top: 2px;
 `;
 
 export const EmptyText = styled.Text`
-  font-size: 14px;
-  color: #bbb;
-  font-style: italic;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8a9bc4;
+  text-align: center;
+  margin: 12px 22px 24px 22px;
 `;
 
-export const InputRow = styled.View`
+export const InputArea = styled.View`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
   flex-direction: row;
   align-items: flex-end;
-  padding: 12px 16px;
+  padding: 12px 18px 18px 18px;
+
+  background-color: #ffffff;
   border-top-width: 1px;
-  border-top-color: #f0f0f0;
-  background-color: #fff;
+  border-top-color: #edf1fa;
 `;
 
-export const CommentInput = styled.TextInput`
+export const CommentInputWrapper = styled.View`
   flex: 1;
-  min-height: 40px;
-  max-height: 100px;
-  background-color: #f5f5f5;
-  border-radius: 20px;
-  padding: 10px 16px;
-  font-size: 14px;
-  color: #222;
-  margin-right: 10px;
+  min-height: 48px;
+  max-height: 104px;
+  background-color: #f4f6fd;
+  border-radius: 22px;
+  padding: 0 14px;
+  border-width: 1px;
+  border-color: #dfe7f7;
 `;
 
 export const SendButton = styled.TouchableOpacity`
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  background-color: ${(p) => (p.disabled ? "#e0e0e0" : "#1e88e5")};
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: #0b49b7;
   align-items: center;
   justify-content: center;
+  margin-left: 10px;
+
+  shadow-color: #0b49b7;
+  shadow-offset: 0px 6px;
+  shadow-opacity: 0.2;
+  shadow-radius: 10px;
+
+  elevation: 5;
 `;
 
-export const LoadingWrapper = styled.View`
-  padding: 40px;
+export const SendButtonDisabled = styled.TouchableOpacity`
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: #cbd5e8;
   align-items: center;
-`;
-
-export const Spacer = styled.View`
-  height: 32px;
+  justify-content: center;
+  margin-left: 10px;
 `;

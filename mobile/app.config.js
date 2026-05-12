@@ -34,7 +34,7 @@ export default {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#ffffff"
       },
-      edgeToEdgeEnabled: true,
+      edgeToEdgeEnabled: false,
 
       config: {
         googleMaps: {

@@ -1,298 +1,281 @@
-import styled from 'styled-components/native';
+import styled from "styled-components/native";
 
 export const Background = styled.View`
   flex: 1;
-  background-color: #EEF2FB;
+  background-color: #eef2fb;
 `;
 
 export const TopAccent = styled.View`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
   height: 6px;
-  background-color: #FBBC05;
-  z-index: 10;
+  background-color: #fbbc05;
 `;
 
 export const Header = styled.View`
-  background-color: #1B4FBB;
-  padding: 18px 24px 24px;
-  border-bottom-left-radius: 28px;
-  border-bottom-right-radius: 28px;
+  background-color: #0b49b7;
+  padding: 18px 24px 22px 24px;
+  border-bottom-left-radius: 34px;
+  border-bottom-right-radius: 34px;
+
+  shadow-color: #0b2f78;
+  shadow-offset: 0px 10px;
+  shadow-opacity: 0.16;
+  shadow-radius: 18px;
+
+  elevation: 7;
+`;
+
+export const GreetingArea = styled.View`
+  margin-bottom: 22px;
 `;
 
 export const GreetingText = styled.Text`
-  font-size: 13px;
-  color: #90AADF;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
+  color: #dbe7ff;
 `;
 
 export const UserName = styled.Text`
-  font-size: 22px;
-  font-weight: 800;
-  color: #FFFFFF;
-  letter-spacing: -0.5px;
+  font-size: 31px;
+  font-weight: 900;
+  color: #ffffff;
   margin-top: 2px;
 `;
 
 export const LocationRow = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-top: 4px;
-  gap: 4px;
+  margin-top: 8px;
 `;
 
 export const LocationText = styled.Text`
   font-size: 12px;
-  color: #90AADF;
-  font-weight: 500;
+  font-weight: 700;
+  color: #dbe7ff;
+  margin-left: 5px;
 `;
 
-export const ScrollContent = styled.ScrollView`
-  flex: 1;
-`;
-
-export const ContentPad = styled.View`
-  padding: 16px;
-  gap: 12px;
-`;
-
-export const Card = styled.View`
-  width: 100%;
-  background-color: #FFFFFF;
-  border-radius: 20px;
-  padding: 20px;
-`;
-
-export const CardHeader = styled.View`
+export const MainAction = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-`;
-
-export const SectionLabel = styled.Text`
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: #7A8FC4;
-`;
-
-export const SectionLink = styled.TouchableOpacity``;
-
-export const SectionLinkText = styled.Text`
-  font-size: 12px;
-  color: #FBBC05;
-  font-weight: 700;
-`;
-
-export const BusRow = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom-width: 1px;
-  border-bottom-color: #EEF2FB;
-  gap: 12px;
-`;
-
-export const BusRowLast = styled(BusRow)`
-  border-bottom-width: 0;
-  padding-bottom: 0;
-`;
-
-export const BusNumBadge = styled.View`
-  background-color: #1B4FBB;
-  border-radius: 8px;
-  padding: 5px 10px;
-  min-width: 42px;
-  align-items: center;
-`;
-
-export const BusNumText = styled.Text`
-  font-size: 13px;
-  font-weight: 700;
-  color: #FFFFFF;
-`;
-
-export const BusInfo = styled.View`
-  flex: 1;
-`;
-
-export const BusDest = styled.Text`
-  font-size: 13px;
-  font-weight: 600;
-  color: #0D2D7A;
-`;
-
-export const BusPonto = styled.Text`
-  font-size: 11px;
-  color: #8A9BC4;
-  margin-top: 2px;
-`;
-
-export const BusTime = styled.View`
-  align-items: flex-end;
-`;
-
-export const BusMin = styled.Text`
-  font-size: 16px;
-  font-weight: 700;
-  color: ${(props) => (props.warn ? '#E6A817' : '#1B4FBB')};
-`;
-
-export const BusHora = styled.Text`
-  font-size: 11px;
-  color: #8A9BC4;
-  margin-top: 1px;
-`;
-
-export const EmptyState = styled.View`
-  align-items: center;
-  padding: 12px 8px 4px;
-  gap: 8px;
-`;
-
-export const EmptyIconCircle = styled.View`
-  width: 48px;
-  height: 48px;
+  background-color: rgba(255, 255, 255, 0.16);
   border-radius: 24px;
-  background-color: #EEF2FB;
+  padding: 16px;
+  border-width: 1px;
+  border-color: rgba(255, 255, 255, 0.18);
+
+  shadow-color: #001b4d;
+  shadow-offset: 0px 8px;
+  shadow-opacity: 0.12;
+  shadow-radius: 14px;
+
+  elevation: 4;
+`;
+
+export const MainActionIcon = styled.View`
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background-color: #ffffff;
   align-items: center;
   justify-content: center;
+  margin-right: 12px;
+
+  shadow-color: #001b4d;
+  shadow-offset: 0px 4px;
+  shadow-opacity: 0.1;
+  shadow-radius: 8px;
+
+  elevation: 3;
 `;
 
-export const EmptyTitle = styled.Text`
-  font-size: 14px;
-  font-weight: 700;
-  color: #0D2D7A;
-  text-align: center;
-`;
-
-export const EmptySub = styled.Text`
-  font-size: 12px;
-  color: #8A9BC4;
-  text-align: center;
-  line-height: 18px;
-`;
-
-export const EmptyButton = styled.TouchableOpacity`
-  margin-top: 6px;
-  padding: 9px 22px;
-  border-radius: 20px;
-  border-width: 1.5px;
-  border-color: #1B4FBB;
-`;
-
-export const EmptyButtonText = styled.Text`
-  font-size: 13px;
-  font-weight: 700;
-  color: #1B4FBB;
-`;
-
-export const OcRow = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 10px 0;
-  border-bottom-width: 1px;
-  border-bottom-color: #EEF2FB;
-  gap: 10px;
-`;
-
-export const OcRowLast = styled(OcRow)`
-  border-bottom-width: 0;
-  padding-bottom: 0;
-`;
-
-export const OcDot = styled.View`
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-  background-color: ${(props) => props.color};
-  margin-top: 4px;
-  flex-shrink: 0;
-`;
-
-export const OcBody = styled.View`
+export const MainActionContent = styled.View`
   flex: 1;
 `;
 
-export const OcTitle = styled.Text`
+export const MainActionTitle = styled.Text`
+  font-size: 15px;
+  font-weight: 900;
+  color: #ffffff;
+`;
+
+export const MainActionText = styled.Text`
+  font-size: 12px;
+  font-weight: 600;
+  color: #dbe7ff;
+  margin-top: 3px;
+`;
+
+export const Content = styled.ScrollView`
+  flex: 1;
+  padding: 24px 22px 0 22px;
+`;
+
+export const SectionHeader = styled.View`
+  margin-bottom: 16px;
+`;
+
+export const SectionTitle = styled.Text`
+  font-size: 22px;
+  font-weight: 900;
+  color: #0b3f9f;
+`;
+
+export const SectionSubtitle = styled.Text`
   font-size: 13px;
   font-weight: 600;
-  color: #0D2D7A;
+  color: #6f7f9f;
+  margin-top: 4px;
 `;
 
-export const OcMeta = styled.View`
+export const ViewAllButton = styled.TouchableOpacity`
+  align-self: flex-start;
   flex-direction: row;
   align-items: center;
-  margin-top: 3px;
-  gap: 6px;
+  background-color: #ffffff;
+  border-radius: 999px;
+  padding: 8px 12px;
+  margin-top: 12px;
+  border-width: 1px;
+  border-color: #dfe7f7;
+
+  shadow-color: #0d2d7a;
+  shadow-offset: 0px 4px;
+  shadow-opacity: 0.06;
+  shadow-radius: 8px;
+
+  elevation: 2;
 `;
 
-export const OcTime = styled.Text`
-  font-size: 11px;
-  color: #8A9BC4;
+export const ViewAllText = styled.Text`
+  font-size: 12px;
+  font-weight: 900;
+  color: #0b49b7;
+  margin-right: 6px;
+`;
+
+export const OccurrenceCard = styled.TouchableOpacity`
+  flex-direction: row;
+  background-color: #ffffff;
+  border-radius: 24px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  border-width: 1px;
+  border-color: #e1e8f8;
+
+  shadow-color: #0d2d7a;
+  shadow-offset: 0px 8px;
+  shadow-opacity: 0.08;
+  shadow-radius: 16px;
+
+  elevation: 4;
+`;
+
+export const OccurrenceAccent = styled.View`
+  width: 6px;
+  background-color: ${(props) => props.color || "#6b7280"};
+`;
+
+export const OccurrenceContent = styled.View`
+  flex: 1;
+  padding: 16px;
+`;
+
+export const OccurrenceTop = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 9px;
 `;
 
 export const Badge = styled.View`
-  padding: 2px 8px;
-  border-radius: 20px;
-  background-color: ${(props) => props.bg};
+  background-color: ${(props) => `${props.color || "#6b7280"}18`};
+  border-radius: 999px;
+  padding: 5px 10px;
 `;
 
 export const BadgeText = styled.Text`
-  font-size: 11px;
+  font-size: 10px;
+  font-weight: 900;
+  color: #46546f;
+`;
+
+export const OccurrenceTitle = styled.Text`
+  font-size: 15px;
+  font-weight: 900;
+  color: #132f6b;
+`;
+
+export const OccurrenceDescription = styled.Text`
+  font-size: 12px;
   font-weight: 600;
-  color: ${(props) => props.color};
+  color: #6f7f9f;
+  line-height: 18px;
+  margin-top: 6px;
+`;
+
+export const OccurrenceFooter = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+`;
+
+export const OccurrenceMeta = styled.View`
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const OccurrenceTime = styled.Text`
+  font-size: 11px;
+  font-weight: 700;
+  color: #8a9bc4;
+  margin-left: 4px;
 `;
 
 export const ConfirmBadge = styled.View`
   flex-direction: row;
   align-items: center;
-  gap: 3px;
-  background-color: #F4F6FD;
-  padding: 2px 8px;
-  border-radius: 20px;
+  background-color: #eef4ff;
+  border-radius: 999px;
+  padding: 7px 10px;
+  margin-left: 10px;
 `;
 
 export const ConfirmText = styled.Text`
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 900;
+  color: #0b49b7;
+  margin-left: 4px;
+`;
+
+export const EmptyBox = styled.View`
+  background-color: #ffffff;
+  border-radius: 24px;
+  padding: 34px 20px;
+  align-items: center;
+  border-width: 1px;
+  border-color: #e1e8f8;
+
+  shadow-color: #0d2d7a;
+  shadow-offset: 0px 8px;
+  shadow-opacity: 0.08;
+  shadow-radius: 16px;
+
+  elevation: 4;
+`;
+
+export const EmptyTitle = styled.Text`
+  font-size: 16px;
+  font-weight: 900;
+  color: #0b3f9f;
+  margin-top: 12px;
+`;
+
+export const EmptyText = styled.Text`
+  font-size: 13px;
   font-weight: 600;
-  color: #7A8FC4;
-`;
-
-export const MapLink = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
-  background-color: #FFFFFF;
-  border-radius: 20px;
-  padding: 14px 18px;
-  gap: 12px;
-`;
-
-export const MapLinkBody = styled.View`
-  flex: 1;
-`;
-
-export const MapLinkTitle = styled.Text`
-  font-size: 14px;
-  font-weight: 700;
-  color: #0D2D7A;
-`;
-
-export const MapLinkSub = styled.Text`
-  font-size: 11px;
-  color: #8A9BC4;
-  margin-top: 2px;
-`;
-
-export const MapIconCircle = styled.View`
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background-color: #EEF2FB;
-  align-items: center;
-  justify-content: center;
+  color: #6f7f9f;
+  text-align: center;
+  margin-top: 4px;
 `;

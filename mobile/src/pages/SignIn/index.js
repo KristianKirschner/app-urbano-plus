@@ -1,8 +1,20 @@
-import { ActivityIndicator, Platform } from "react-native";
+import {
+  ActivityIndicator,
+  Keyboard,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../contexts/auth";
+
 import {
   Background,
   TopAccent,
-  Container,
+  CityShape,
+  ScrollContent,
   LogoWrapper,
   LogoText,
   LogoPlus,
@@ -13,9 +25,11 @@ import {
   AreaInput,
   InputLabel,
   InputWrapper,
-  InputIcon,
   Input,
+  ForgotButton,
   ForgotText,
+  ErrorBox,
+  ErrorText,
   SubmitButton,
   SubmitText,
   Divider,
@@ -25,99 +39,154 @@ import {
   LinkText,
   LinkHighlight,
 } from "./styles";
-import { useNavigation } from "@react-navigation/native";
-import { useContext, useState } from "react";
-import { AuthContext } from "../../contexts/auth";
-import { Feather } from "@expo/vector-icons";
 
 export default function SignIn() {
   const navigation = useNavigation();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const { signIn, loadingAuth } = useContext(AuthContext);
 
-  function handleLogin() {
-    signIn(email, password);
+  async function handleLogin() {
+    setErrorMessage("");
+
+    if (!email.trim() || !password) {
+      setErrorMessage("Preencha o e-mail e a senha para continuar.");
+      return;
+    }
+
+    try {
+      await signIn(email.trim(), password);
+    } catch (error) {
+      const message = error?.response?.data?.error;
+
+      if (message === "Invalid credentials") {
+        setErrorMessage("E-mail ou senha inválidos.");
+        return;
+      }
+
+      if (message === "User not found") {
+        setErrorMessage("Usuário não encontrado.");
+        return;
+      }
+
+      setErrorMessage("Não foi possível entrar. Tente novamente.");
+    }
   }
 
   return (
     <Background>
       <TopAccent />
-      <Container behavior={Platform.OS === "ios" ? "padding" : ""} enabled>
-        <LogoWrapper>
-          <LogoText>Urbano</LogoText>
-          <LogoPlus>+</LogoPlus>
-        </LogoWrapper>
+      <CityShape />
 
-        <LogoTagline>Soluções Urbanas</LogoTagline>
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        enableAutomaticScroll
+        extraScrollHeight={30}
+        keyboardOpeningTime={0}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        overScrollMode="never"
+        contentContainerStyle={ScrollContent}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View>
+            <LogoWrapper>
+              <LogoText>Urbano</LogoText>
+              <LogoPlus>+</LogoPlus>
+            </LogoWrapper>
 
-        <Card>
-          <CardTitle>Bem-vindo! </CardTitle>
-          <CardSubtitle>Faça login para continuar</CardSubtitle>
+            <LogoTagline>Soluções Urbanas</LogoTagline>
 
-          <AreaInput>
-            <InputLabel>E-mail</InputLabel>
-            <InputWrapper>
-              <Feather
-                name="mail"
-                size={18}
-                color="#FBBC05"
-                style={{ marginRight: 10 }}
-              />
-              <Input
-                placeholder="seu@email.com"
-                placeholderTextColor="#B0BDD8"
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-            </InputWrapper>
-          </AreaInput>
+            <Card>
+              <CardTitle>Bem-vindo</CardTitle>
+              <CardSubtitle>Acesse sua conta para continuar</CardSubtitle>
 
-          <AreaInput>
-            <InputLabel>Senha</InputLabel>
-            <InputWrapper>
-              <Feather
-                name="lock"
-                size={18}
-                color="#FBBC05"
-                style={{ marginRight: 10 }}
-              />
-              <Input
-                placeholder="••••••••"
-                placeholderTextColor="#B0BDD8"
-                secureTextEntry={true}
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-              />
-            </InputWrapper>
-          </AreaInput>
+              <AreaInput>
+                <InputLabel>E-mail</InputLabel>
 
-          <ForgotText>Esqueceu a senha?</ForgotText>
+                <InputWrapper>
+                  <Feather
+                    name="mail"
+                    size={18}
+                    color="#0B49B7"
+                    style={{ marginRight: 10 }}
+                  />
 
-          <SubmitButton activeOpacity={0.85} onPress={handleLogin}>
-            {loadingAuth ? (
-              <ActivityIndicator size={24} color="#FFF" />
-            ) : (
-              <SubmitText>Entrar</SubmitText>
-            )}
-          </SubmitButton>
+                  <Input
+                    placeholder="seu@email.com"
+                    placeholderTextColor="#A7B6D8"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    returnKeyType="next"
+                  />
+                </InputWrapper>
+              </AreaInput>
 
-          <Divider>
-            <DividerLine />
-            <DividerText>ou</DividerText>
-            <DividerLine />
-          </Divider>
-        </Card>
+              <AreaInput>
+                <InputLabel>Senha</InputLabel>
 
-        <Link>
-          <LinkText>Ainda não tem conta?</LinkText>
-          <LinkHighlight onPress={() => navigation.navigate("SignUp")}>
-            Criar conta
-          </LinkHighlight>
-        </Link>
-      </Container>
+                <InputWrapper>
+                  <Feather
+                    name="lock"
+                    size={18}
+                    color="#0B49B7"
+                    style={{ marginRight: 10 }}
+                  />
+
+                  <Input
+                    placeholder="••••••••"
+                    placeholderTextColor="#A7B6D8"
+                    secureTextEntry
+                    value={password}
+                    onChangeText={setPassword}
+                    returnKeyType="done"
+                    onSubmitEditing={handleLogin}
+                  />
+                </InputWrapper>
+              </AreaInput>
+
+              <ForgotButton activeOpacity={0.7}>
+                <ForgotText>Esqueceu a senha?</ForgotText>
+              </ForgotButton>
+
+              {errorMessage ? (
+                <ErrorBox>
+                  <Feather name="alert-circle" size={18} color="#C62828" />
+                  <ErrorText>{errorMessage}</ErrorText>
+                </ErrorBox>
+              ) : null}
+
+              <SubmitButton
+                activeOpacity={0.85}
+                onPress={handleLogin}
+                disabled={loadingAuth}
+              >
+                {loadingAuth ? (
+                  <ActivityIndicator size={24} color="#FFFFFF" />
+                ) : (
+                  <SubmitText>Entrar</SubmitText>
+                )}
+              </SubmitButton>
+
+            </Card>
+
+            <Link>
+              <LinkText>Ainda não tem conta?</LinkText>
+
+              <LinkHighlight onPress={() => navigation.navigate("SignUp")}>
+                Criar conta
+              </LinkHighlight>
+            </Link>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAwareScrollView>
     </Background>
   );
 }

@@ -9,7 +9,21 @@ export default function AuthRoutes() {
   return (
     <AuthStack.Navigator
       screenOptions={{
-        animation: 'slide_from_right',
+        animation: "slide_from_right",
+        headerShadowVisible: false,
+        headerStyle: {
+          backgroundColor: "#EEF2FB",
+        },
+        headerTintColor: "#0B49B7",
+        headerTitleAlign: "center",
+        headerBackTitleVisible: false,
+        headerTitleStyle: {
+          fontWeight: "900",
+          fontSize: 15,
+          color: "#0B3F9F",
+          letterSpacing: 0.4,
+        },
+        headerBackButtonDisplayMode: "minimal",
       }}
     >
       <AuthStack.Screen
@@ -19,22 +33,13 @@ export default function AuthRoutes() {
           headerShown: false,
         }}
       />
+
       <AuthStack.Screen
         name="SignUp"
         component={SignUp}
         options={{
-          headerTitle: 'Criar conta',
-          headerTintColor: '#1B4FBB',
-          headerBackTitleVisible: false,
-          headerShadowVisible: false,
-          headerStyle: {
-            backgroundColor: '#EEF2FB',
-          },
-          headerTitleStyle: {
-            fontWeight: '700',
-            fontSize: 16,
-            color: '#0D2D7A',
-          },
+          headerTransparent: true,
+          headerShown: false
         }}
       />
     </AuthStack.Navigator>

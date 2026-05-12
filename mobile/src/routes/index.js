@@ -1,7 +1,10 @@
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, View, StatusBar } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 import AuthRoutes from "./auth.routes";
 import AppRoutes from "./app.routes";
 import AdminRoutes from "./admin.routes";
+
 import { useContext } from "react";
 import { AuthContext } from "../contexts/auth";
 
@@ -10,13 +13,39 @@ export default function Routes() {
 
   if (loading) {
     return (
-      <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
-        <ActivityIndicator size="small" color="#FBBC05" />
-      </View>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#EEF2FB" }}>
+        <StatusBar
+          backgroundColor="#EEF2FB"
+          barStyle="dark-content"
+        />
+
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            flex: 1,
+          }}
+        >
+          <ActivityIndicator size="small" color="#FBBC05" />
+        </View>
+      </SafeAreaView>
     );
   }
 
-  if (!signed) return <AuthRoutes />;
-  if (user?.role === "ADMIN") return <AdminRoutes />;
-  return <AppRoutes />;
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#EEF2FB" }}>
+      <StatusBar
+        backgroundColor="#EEF2FB"
+        barStyle="dark-content"
+      />
+
+      {!signed ? (
+        <AuthRoutes />
+      ) : user?.role === "ADMIN" ? (
+        <AdminRoutes />
+      ) : (
+        <AppRoutes />
+      )}
+    </SafeAreaView>
+  );
 }
